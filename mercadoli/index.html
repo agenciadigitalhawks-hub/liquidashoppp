@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    
+<script
+	src="https://cdn.jsdelivr.net/gh/xTracky/static@latest/utm-handler.js"
+	data-token="9bcdc6dc-171c-4a65-8733-f908e8198551"
+>
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Kwai Shop</title>
+
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/fonts.css">
+
+<link rel="icon" href="images/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="180x180" href="images/favicon.png">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+
+<style>
+.quiz-img {
+  width: 90%;
+  display: block;
+  margin: 0 auto;
+  border-radius: 15px;
+}
+
+.question {
+  display: none;
+}
+
+.question.active {
+  display: block;
+}
+
+.nav-logo {
+  height: 5vh;
+}
+
+.social-proof {
+    position: fixed;
+    bottom: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    font-size: 14px;
+    z-index: 9999;
+    transition: all 0.6s ease;
+    max-width: 92%;
+    width: 360px;
+    opacity: 0;
+}
+
+.social-proof.show {
+    bottom: 25px;
+    opacity: 1;
+}
+
+.social-proof img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.proof-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.proof-text {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.proof-subtext {
+    font-size: 12px;
+    color: #777;
+}
+
+.proof-subtext b {
+    color: #ff4a01;
+}
+</style>
+
+
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="menu-icon">
+        <img src="images/brand-banner.3f2f57a3.png" class="nav-logo">
+    </div>
+
+    <div class="menu-icon">
+        <span class="material-symbols-outlined">menu</span>
+    </div>
+</nav>
+
+<div class="pergunta">
+
+<div class="respondaeganhe">
+    <p>Responda e ganhe!</p>
+</div>
+
+<div class="container">
+    <div class="progress-bar-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0%</div>
+    </div>
+</div>
+
+<!-- PERGUNTAS -->
+
+<div class="question active" data-question="1">
+    <img src="images/11.png" class="quiz-img">
+    <p class="pergunta_title">O que você mais gosta na Shopee?</p>
+    <ul class="quiz-options">
+        <li><button>Promoções relampago</button></li>
+        <li><button>Cupons de desconto</button></li>
+        <li><button>Agilidade na entrega</button></li>
+        <li><button>Garantia e segurança</button></li>
+    </ul>
+</div>
+
+<div class="question" data-question="2">
+    <img src="images/4.png" class="quiz-img">
+    <p class="pergunta_title">Você é um cliente fiel da Shopee? Se sim, há quanto tempo?</p>
+    <ul class="quiz-options">
+        <li><button>Sim, há mais de 5 anos</button></li>
+        <li><button>Sim, entre 1 a 5 anos</button></li>
+        <li><button>Sim, há menos de 1 ano</button></li>
+        <li><button>Não, sou novo cliente</button></li>
+    </ul>
+</div>
+
+<div class="question" data-question="3">
+    <img src="images/12.png" class="quiz-img">
+    <p class="pergunta_title">Você já ouviu falar da Shopee Shop?</p>
+    <ul class="quiz-options">
+        <li><button>Sim, já conheço</button></li>
+        <li><button>Já ouvi falar, mas nunca usei</button></li>
+        <li><button>Não, nunca conheci</button></li>
+        <li><button>Não, porém adorei a ideia</button></li>
+    </ul>
+</div>
+
+<div class="question" data-question="4">
+    <img src="images/mercy.png" class="quiz-img">
+    <p class="pergunta_title">Somente hoje a loja oficial está com promoções exclusivas!</p>
+    <ul class="quiz-options">
+        <li><button>Quero conferir</button></li>
+        <li><button>Estou animado(a)</button></li>
+        <li><button>Nunca participei</button></li>
+        <li><button>Adorei a ideia</button></li>
+    </ul>
+</div>
+
+<div class="question" data-question="5">
+    <img src="images/7.png" class="quiz-img">
+    <p class="pergunta_title">Você pode ganhar até 95% de desconto!</p>
+    <ul class="quiz-options">
+        <li><button>Esperei anos por isso</button></li>
+        <li><button>Amo promoções</button></li>
+        <li><button>Sempre confio</button></li>
+        <li><button>É top!</button></li>
+    </ul>
+</div>
+
+<div class="question" data-question="6">
+    <img src="images/10.png" class="quiz-img">
+    <p class="pergunta_title">Pronto para girar a roleta?</p>
+    <ul class="quiz-options">
+        <li><button>Hoje é meu dia</button></li>
+        <li><button>Estou confiante</button></li>
+        <li><button>Qualquer desconto vale</button></li>
+        <li><button>Nunca ganho...</button></li>
+    </ul>
+</div>
+
+<div style="margin-top:20px;"></div>
+
+<button class="next-button" id="next-button">Próximo</button>
+
+</div>
+
+<!-- SCRIPTS -->
+
+<script>
+(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "vo3nvc6ncq");
+
+(function(){
+    let backUrl = '../back2';
+    if (window.location.search) {
+        backUrl += window.location.search;
+    }
+
+    history.pushState(null, null, location.href);
+    window.addEventListener("popstate", function(){
+        window.location.href = backUrl;
+    });
+})();
+
+let currentQuestion = 1;
+const totalQuestions = 6;
+let answered = false;
+
+const nextBtn = document.getElementById("next-button");
+const progressBar = document.getElementById("progress");
+const progressText = document.getElementById("progress-text");
+
+updateProgress();
+
+nextBtn.addEventListener("click", nextQuestion);
+
+function nextQuestion() {
+
+    if (!answered) return;
+
+    answered = false;
+
+    if (currentQuestion >= totalQuestions) {
+
+        if (typeof clarity === "function") {
+            clarity("event", "quiz_completed");
+        }
+
+        setTimeout(() => {
+            window.location.href = "roleta" + window.location.search;
+        }, 150);
+
+        return;
+    }
+
+    document.querySelector(`[data-question="${currentQuestion}"]`).classList.remove("active");
+    currentQuestion++;
+    document.querySelector(`[data-question="${currentQuestion}"]`).classList.add("active");
+
+    updateProgress();
+}
+
+function updateProgress() {
+    const percent = Math.round((currentQuestion / totalQuestions) * 100);
+    progressBar.style.width = percent + "%";
+    progressText.innerText = percent + "%";
+}
+
+document.querySelectorAll('.quiz-options button').forEach(button => {
+    button.addEventListener('click', function() {
+
+        const container = this.closest('.quiz-options');
+
+        container.querySelectorAll('button').forEach(btn => {
+            btn.style.borderColor = '#ccc';
+            btn.style.backgroundColor = '';
+            btn.style.color = '';
+            btn.style.fontWeight = '';
+        });
+
+        this.style.borderColor = '#fe4808';
+        this.style.backgroundColor = '#fe4808';
+        this.style.color = '#ffffff';
+        this.style.fontWeight = 'bold';
+
+        answered = true;
+    });
+});
+</script>
+
+<div id="social-proof" class="social-proof">
+    <img id="proof-img" src="" alt="Pessoa">
+    <div class="proof-content">
+        <div class="proof-text">
+            <span id="proof-name"></span> de <span id="proof-city"></span>
+        </div>
+        <div class="proof-subtext">
+            Resgatou <b id="proof-discount"></b> • <span id="proof-time"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+const people = [
+    { name: "Maria", city: "São Paulo", discount: "50%", img: "https://randomuser.me/api/portraits/women/44.jpg" },
+    { name: "Carlos", city: "Rio de Janeiro", discount: "70%", img: "https://randomuser.me/api/portraits/men/32.jpg" },
+    { name: "Fernanda", city: "Belo Horizonte", discount: "65%", img: "https://randomuser.me/api/portraits/women/68.jpg" },
+    { name: "Rafael", city: "Curitiba", discount: "80%", img: "https://randomuser.me/api/portraits/men/76.jpg" },
+    { name: "Juliana", city: "Salvador", discount: "55%", img: "https://randomuser.me/api/portraits/women/12.jpg" },
+    { name: "Lucas", city: "Fortaleza", discount: "60%", img: "https://randomuser.me/api/portraits/men/54.jpg" },
+    { name: "Patrícia", city: "Brasília", discount: "75%", img: "https://randomuser.me/api/portraits/women/23.jpg" },
+    { name: "André", city: "Recife", discount: "90%", img: "https://randomuser.me/api/portraits/men/85.jpg" }
+];
+
+let current = 0;
+
+function randomTime() {
+    const minutes = Math.floor(Math.random() * 4) + 1;
+    return "há " + minutes + " minuto" + (minutes > 1 ? "s" : "");
+}
+
+function showProof() {
+    const proof = document.getElementById("social-proof");
+    const person = people[current];
+
+    document.getElementById("proof-name").innerText = person.name;
+    document.getElementById("proof-city").innerText = person.city;
+    document.getElementById("proof-discount").innerText = person.discount;
+    document.getElementById("proof-img").src = person.img;
+    document.getElementById("proof-time").innerText = randomTime();
+
+    proof.classList.add("show");
+
+    setTimeout(() => {
+        proof.classList.remove("show");
+    }, 4500);
+
+    current = (current + 1) % people.length;
+}
+
+// começa após 4 segundos
+setTimeout(() => {
+    showProof();
+    setInterval(showProof, 6500);
+}, 4000);
+</script>
+
+<script src="/assets/tracker.js" defer></script>
+</body>
+</html>

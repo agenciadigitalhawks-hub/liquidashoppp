@@ -1,0 +1,6 @@
+# Pastas preservadas no Git mas NAO publicadas na Vercel.
+# _inativos/ = produtos fora do funil (checkout antigo/desativado).
+_inativos
+
+# Arquivos pesados que nao fazem parte do site
+*.zip

@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Correcoes do cabecalho de busca
+   --------------------------------------------------------------------------
+   O header e montado com style inline em todas as paginas, entao o override
+   precisa de !important. No mobile o input ficava estreito demais e o
+   placeholder desaparecia por baixo do botao da lupa ("Buscar na Sho|").
+   Alvos por atributo porque o markup nao tem classes.
+   ========================================================================== */
+@media (max-width: 640px) {
+  img[alt="Shopee"] {
+    height: 26px !important;
+  }
+
+  input[placeholder="Buscar na Shopee"] {
+    padding: 10px 44px 10px 12px !important;
+    font-size: 13px !important;
+  }
+
+  button[aria-label="Buscar"] {
+    padding: 0 12px !important;
+  }
+
+  button[aria-label="Carrinho de compras"] {
+    padding: 6px !important;
+  }
+}
+
+/* ==========================================================================
+   Galeria do produto - quadro de proporcao fixa
+   --------------------------------------------------------------------------
+   O Swiper adota a altura do slide mais alto. Em 10 produtos a galeria mistura
+   fotos quadradas com fotos em retrato (o panela chega a 582x1280), e nas
+   quadradas sobrava meia tela em branco - bem visivel no celular, que e onde
+   o site e usado.
+
+   Com quadro 1:1 e object-fit:cover toda foto preenche o mesmo espaco: o que
+   passa do quadrado e recortado pelo centro. Perde-se a borda das fotos em
+   retrato, mas nao sobra faixa branca em nenhuma - e a galeria fica com
+   altura constante, o que tambem estabiliza a troca de cor das variantes.
+   ========================================================================== */
+.main-swiper .swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;      /* nao corta: o que nao for quadrado ganha faixa
+                               lateral. Quando as fotos vierem recortadas em
+                               1:1, contain e cover ficam identicos - entao
+                               este valor e o seguro, porque uma foto fora do
+                               padrao no futuro aparece inteira em vez de
+                               mutilada. */
+  background: #fff;
+}
+
+/* ==========================================================================
+   Alvos de toque no celular
+   --------------------------------------------------------------------------
+   O site e usado no celular, e a auditoria em tela de 390px achou botoes de
+   32 a 38px. O dedo precisa de ~44px para acertar sem erro (recomendacao da
+   Apple; o Google pede 48). Sao os botoes do cabecalho de busca, a barra de
+   acoes do produto, o carrinho dos cards da vitrine e a barra fixa de baixo.
+
+   min-width/min-height em vez de padding: o icone continua do mesmo tamanho,
+   so a area clicavel cresce. Nada muda de posicao.
+   ========================================================================== */
+#ewqewqewq button,
+button[aria-label="Buscar"],
+button[aria-label="Carrinho de compras"],
+button[aria-label="Ordenar"],
+button[aria-label="Layout"],
+button[aria-label="Fechar"] {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* O carrinho dos cards tem fundo rosa visivel: crescer o botao para 44px
+   engordava a bolinha e jogava o icone para a linha de base do texto. Aqui o
+   circulo fica no tamanho de desenho e a area de toque cresce por fora, num
+   ::after transparente - o dedo acerta 44px, o olho ve 34px. */
+button[aria-label="Adicionar ao carrinho"] {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+}
+
+button[aria-label="Adicionar ao carrinho"]::after {
+  content: "";
+  position: absolute;
+  inset: -5px;            /* 34 + 5 + 5 = 44 */
+  border-radius: 9999px;
+}
+
+/* barra fixa inferior: os atalhos Loja e Chat tinham 22px de largura */
+.fixed.bottom-0 a,
+.fixed.bottom-0 button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Selos dos cards da vitrine: 10px e pequeno demais para ler no celular. */
+@media (max-width: 640px) {
+  .text-\[10px\] { font-size: 11px; }
+}

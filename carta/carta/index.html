@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<!-- Resolve caminhos relativos mesmo se a URL vier sem barra final -->
+<base href="/carta/carta/">
+
+<script
+	src="https://cdn.jsdelivr.net/gh/xTracky/static@latest/utm-handler.js"
+	data-token="9bcdc6dc-171c-4a65-8733-f908e8198551"
+>
+</script>
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "waa1ksf8c6");
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cartas Premiadas - Shopee</title>
+    <meta name="description" content="Jogue o Desafio das Cartas Premiadas e ganhe até 95% de desconto!">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- As cores shopee/gold e a fonte Inter agora vem compiladas em
+         /assets/carta.css (gerado com carta.config.js), no lugar do
+         cdn.tailwindcss.com, que compilava no navegador a cada visita. -->
+    <style>
+        * { -webkit-tap-highlight-color: transparent; user-select: none; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F5;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        /* 3D Card System */
+        .perspective { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .card-container { transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-container.flipped { transform: rotateY(180deg); }
+
+        /* Glossy sweep on card front */
+        .card-glossy { position: relative; overflow: hidden; }
+        .card-glossy::after {
+            content: '';
+            position: absolute; top: -50%; left: -80%;
+            width: 60%; height: 200%;
+            background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.25) 48%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0.25) 52%, transparent 70%);
+            transform: skewX(-20deg);
+            animation: glossy 3.5s ease-in-out infinite;
+            pointer-events: none; z-index: 2;
+        }
+        @keyframes glossy {
+            0% { left: -80%; } 35% { left: 160%; } 100% { left: 160%; }
+        }
+
+        /* CTA Pulse */
+        @keyframes cta-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 25px rgba(238,77,45,0.45); }
+            50% { transform: scale(1.05); box-shadow: 0 8px 35px rgba(238,77,45,0.65); }
+        }
+        .cta-pulse { animation: cta-pulse 1.6s ease-in-out infinite; }
+
+        /* Modal pop */
+        @keyframes modal-pop {
+            0% { opacity: 0; transform: scale(0.85) translateY(15px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-pop { animation: modal-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+        /* Screen flash */
+        @keyframes screen-flash {
+            0% { opacity: 0; } 20% { opacity: 0.7; } 100% { opacity: 0; }
+        }
+        .screen-flash { animation: screen-flash 0.7s ease-out forwards; pointer-events: none; }
+
+        /* Timer blink */
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .timer-blink { animation: blink 1s ease-in-out infinite; }
+
+        /* Progress bar glow */
+        @keyframes bar-glow {
+            0%, 100% { box-shadow: 0 0 8px rgba(238,77,45,0.3); }
+            50% { box-shadow: 0 0 20px rgba(238,77,45,0.7), 0 0 40px rgba(238,77,45,0.3); }
+        }
+        .bar-glow { animation: bar-glow 1.2s ease-in-out infinite; }
+
+        /* Progress bar pulse */
+        @keyframes bar-pulse {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.3); }
+        }
+        .bar-pulse { animation: bar-pulse 0.8s ease-in-out infinite; }
+
+        /* Flying number */
+        .flying-number {
+            position: fixed; z-index: 100; pointer-events: none;
+            font-weight: 900; font-size: 1.25rem;
+            color: #EE4D2D;
+            text-shadow: 0 2px 8px rgba(238,77,45,0.4);
+        }
+
+        /* Attempts counter bounce */
+        @keyframes counter-bounce {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.4); }
+            60% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .counter-bounce { animation: counter-bounce 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+        /* Card front subtle pattern */
+        .card-front-pattern {
+            background-image:
+                radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(255,255,255,0.06) 0%, transparent 50%);
+        }
+
+        /* Chosen card glow */
+        @keyframes chosen-glow-anim {
+            0%, 100% { box-shadow: 0 0 15px rgba(255,215,0,0.4); border-color: rgba(238,77,45,0.3); transform: rotateY(180deg) scale(1); }
+            50% { box-shadow: 0 0 40px rgba(255,215,0,0.9), inset 0 0 15px rgba(255,215,0,0.4); border-color: #FFD700; transform: rotateY(180deg) scale(1.05); }
+        }
+        .chosen-glow { z-index: 20 !important; }
+        .chosen-glow .card-back {
+            animation: chosen-glow-anim 2s ease-in-out infinite;
+            border-width: 2px;
+        }
+    </style>
+    <link rel="stylesheet" href="/assets/carta.css?v=20260924b">
+</head>
+<body class="flex flex-col min-h-dvh">
+
+    <!-- HEADER -->
+    <header class="w-full bg-gradient-to-r from-shopee to-shopee-light px-4 py-3 flex items-center justify-between shadow-lg relative z-40">
+        <div class="flex items-center gap-2">
+            <img src="/carta/carta/shopee-logo.png" alt="Shopee" class="h-6 brightness-0 invert opacity-90">
+        </div>
+        <h1 class="text-white font-extrabold text-xs tracking-[0.14em] uppercase absolute left-1/2 -translate-x-1/2 whitespace-nowrap">
+            CARTAS PREMIADAS
+        </h1>
+        <div class="w-8"></div>
+    </header>
+
+    <!-- MAIN GAME -->
+    <main class="flex-1 flex flex-col items-center px-4 pt-5 pb-6 max-w-md mx-auto w-full">
+        <!-- Round Badge + Attempts Counter -->
+        <div class="flex items-center gap-2 mb-1">
+            <div id="round-badge">
+                <span class="inline-block bg-shopee/10 text-shopee text-[11px] font-bold px-3 py-1 rounded-full tracking-wide">RODADA 1</span>
+            </div>
+            <div id="attempts-counter" class="hidden">
+                <span class="inline-flex items-center gap-1 bg-green-500/10 text-green-600 text-[11px] font-bold px-3 py-1 rounded-full tracking-wide">
+                    🎟️ Tentativas: <span id="attempts-num" class="text-green-700 font-black">3</span>
+                </span>
+            </div>
+        </div>
+
+        <h2 id="game-title" class="text-xl font-extrabold text-gray-800 text-center mb-0.5 leading-tight">Escolha uma carta!</h2>
+        <p id="game-subtitle" class="text-gray-400 text-xs text-center mb-4">Toque em uma carta para revelar seu prêmio.</p>
+
+        <!-- PROGRESS BAR -->
+        <div id="progress-section" class="w-full max-w-[340px] mb-4">
+            <div class="flex items-center justify-between mb-1">
+                <span class="text-[11px] text-gray-400 font-semibold uppercase tracking-wider">Seu Desconto Acumulado:</span>
+                <span id="progress-label" class="text-xs font-extrabold text-shopee">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden relative">
+                <div id="progress-bar" class="h-full rounded-full bg-gradient-to-r from-shopee to-shopee-light transition-all duration-1000 ease-out" style="width: 0%"></div>
+            </div>
+            <p id="progress-hint" class="text-[11px] text-gray-400 mt-1 text-center transition-opacity duration-500">Complete as rodadas para acumular desconto.</p>
+        </div>
+
+        <!-- VICTORY CTA (hidden until 95%) -->
+        <div id="victory-cta-wrapper" class="w-full max-w-[340px] mb-4 hidden">
+            <button id="victory-cta" class="w-full bg-gradient-to-r from-shopee to-shopee-light text-white font-extrabold py-4 rounded-2xl cta-pulse text-base tracking-wide uppercase shadow-2xl active:scale-95 transition-transform" style="padding-top:1.1rem;padding-bottom:1.1rem;">
+                RESGATE SEU DESCONTO
+            </button>
+        </div>
+
+        <!-- 6-Card Grid -->
+        <div id="card-grid-wrapper" class="w-full max-w-[340px] relative" style="min-height: 240px;">
+            <div id="card-grid" class="grid grid-cols-3 gap-2.5 w-full"></div>
+        </div>
+    </main>
+
+    <!-- INTRO POPUP -->
+    <div id="intro-overlay" class="fixed inset-0 bg-black/65 backdrop-blur-sm z-50 flex items-center justify-center px-5">
+        <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl modal-pop flex flex-col overflow-hidden">
+            <!-- Orange header area -->
+            <div class="bg-gradient-to-br from-shopee to-shopee-light p-5 text-white text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_60%)]"></div>
+                <div class="text-5xl mb-1.5 relative z-10">🎁</div>
+                <h3 class="text-lg font-extrabold uppercase relative z-10 leading-tight">Você foi selecionado!</h3>
+                <p class="text-white/70 text-[11px] mt-1 relative z-10">Bônus Exclusivo</p>
+            </div>
+            <!-- White content area (flex column, generous bottom padding) -->
+            <div class="flex flex-col items-center px-5 pt-5 pb-8 text-center">
+                <div class="text-gray-500 text-[13px] leading-relaxed text-left space-y-2.5 mb-5 w-full">
+                    <p>Escolha uma das cartas abaixo e descubra se você ganhou um <strong class="text-gray-700">prêmio oculto</strong> 🍀</p>
+                    <p>Cada carta pode liberar <strong class="text-shopee">descontos secretos</strong> e ofertas exclusivas dentro da Shopee.</p>
+                    <p class="text-gray-400 text-[12px]">⚠️ Atenção: Você tem poucas tentativas e os prêmios são limitados — depois que acabar, acabou.</p>
+                    <p>🔥 Algumas cartas escondem descontos <strong class="text-shopee">ALTOS</strong>… outras não.<br>Só existe um jeito de descobrir.</p>
+                    <p class="font-semibold text-gray-700">👉 Escolha sua carta agora e veja se você foi premiado!</p>
+                </div>
+                <button id="intro-start" class="w-full bg-gradient-to-r from-shopee to-shopee-light text-white font-bold py-3.5 rounded-xl cta-pulse text-sm tracking-wide uppercase shadow-lg active:scale-95 transition-transform flex flex-col items-center gap-1">
+                    <span>COMEÇAR</span>
+                    <span class="text-[10px] font-normal normal-case tracking-normal text-white/60">Clique e tente a sua sorte</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROUND MODAL -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center px-5">
+        <div id="modal-box" class="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl">
+            <div class="bg-gradient-to-br from-shopee to-shopee-light p-5 text-white text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.15),transparent_60%)]"></div>
+                <div id="modal-emoji" class="text-5xl mb-1.5 relative z-10">😔</div>
+                <h3 id="modal-title" class="text-lg font-extrabold uppercase relative z-10">Título</h3>
+            </div>
+            <div class="p-5 text-center">
+                <p id="modal-desc" class="text-gray-500 text-sm leading-relaxed mb-5"></p>
+                <button id="modal-btn" class="w-full bg-gradient-to-r from-shopee to-shopee-light text-white font-bold py-3.5 rounded-xl cta-pulse text-sm tracking-wide uppercase shadow-lg active:scale-95 transition-transform">
+                    CONTINUAR
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FINAL SCREEN -->
+    <div id="final-screen" class="fixed inset-0 z-40 hidden flex-col items-center justify-center px-5 overflow-y-auto bg-[#F5F5F5]">
+        <div class="w-full max-w-sm flex flex-col items-center py-8">
+            <p class="text-gray-400 text-[10px] uppercase tracking-[0.2em] font-bold mb-1">Prêmio Desbloqueado</p>
+            <h2 class="text-3xl font-black text-gray-800 mb-6 text-center">Parabéns! 🎉</h2>
+            <div class="w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-shopee/20 relative">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-6 h-6 bg-[#F5F5F5] rounded-full"></div>
+                <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-6 h-6 bg-[#F5F5F5] rounded-full"></div>
+                <div class="bg-gradient-to-br from-shopee to-shopee-light p-5 text-white text-center">
+                    <p class="text-white/70 text-[10px] uppercase tracking-[0.2em] font-semibold">Desconto Exclusivo</p>
+                    <p class="text-5xl font-black mt-1 drop-shadow-sm">ATÉ 95% OFF</p>
+                </div>
+                <div class="p-5 text-center border-t border-dashed border-shopee/20">
+                    <p class="text-gray-400 text-[10px] uppercase tracking-wider font-bold mb-1.5">Seu código</p>
+                    <div class="bg-gray-50 border-2 border-dashed border-shopee/25 rounded-lg py-2.5 px-5 inline-block">
+                        <span class="text-shopee font-black text-xl tracking-[0.2em]">SHOPEE95</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm border border-red-100">
+                <span class="text-red-500 text-xs">⏰</span>
+                <span class="text-gray-500 text-xs font-medium">Expira em</span>
+                <span id="final-timer" class="text-shopee font-black text-sm font-mono">12:00</span>
+            </div>
+            <button id="final-cta" class="mt-6 w-full bg-gradient-to-r from-shopee to-shopee-light text-white font-extrabold py-4 rounded-2xl cta-pulse text-base tracking-wide uppercase shadow-2xl active:scale-95 transition-transform" style="padding-top:1.1rem;padding-bottom:1.1rem;">
+                RESGATE SEU DESCONTO
+            </button>
+            <p class="text-[10px] text-gray-300 mt-2.5 text-center">Aplicável em compras selecionadas. Sujeito a termos.</p>
+        </div>
+    </div>
+
+    <!-- Screen Flash -->
+    <div id="screen-flash" class="fixed inset-0 bg-white z-[55] pointer-events-none opacity-0"></div>
+
+<script>
+(() => {
+    // ============================
+    // STATE
+    // ============================
+    let round = 0;
+    let clickable = false;
+    let attempts = 0;
+    let accumulatedDiscount = 0;
+
+    // Prize display labels
+    const P = {
+        MISS:      'Não foi dessa vez',
+        RETRY:     'Tente Mais Uma Vez',
+        EMPTY:     'Cupom Vazio',
+        TEN:       '10% de Desconto',
+        FIFTY:     '50% de Desconto',
+        EIGHTY5:   '85% de Desconto',
+        NINETY5:   '95% de Desconto',
+        SURPRISE:  'Prêmio Surpresa',
+        ROUNDS:    '+3 Rodadas Extras',
+    };
+    const ICONS = {
+        [P.MISS]:     '😔',
+        [P.RETRY]:    '🔄',
+        [P.EMPTY]:    '📦',
+        [P.TEN]:      '🏷️',
+        [P.FIFTY]:    '🎫',
+        [P.EIGHTY5]:  '🏆',
+        [P.NINETY5]:  '💎',
+        [P.SURPRISE]: '🎁',
+        [P.ROUNDS]:   '🎟️',
+    };
+
+    // Round configs - what user wins + what others show
+    // Rule: others never show the prize user will win in the NEXT round
+    const ROUND_CFG = {
+        1: {
+            userPrize: P.ROUNDS,
+            // Next round user loses → no restriction on "Não foi dessa vez" but keep it varied
+            others: [P.FIFTY, P.SURPRISE, P.EMPTY, P.MISS, P.RETRY],
+        },
+        2: {
+            userPrize: P.MISS,
+            // Show 95% nearby to trigger "quase acertei!" frustration
+            // Next round user wins 10% → don't show "10% de Desconto"
+            others: [P.NINETY5, P.FIFTY, P.SURPRISE, P.EMPTY, P.RETRY],
+        },
+        3: {
+            userPrize: P.TEN,
+            // Next round user wins 85% → don't show "85% de Desconto"
+            others: [P.MISS, P.FIFTY, P.SURPRISE, P.RETRY, P.EMPTY],
+        },
+        4: {
+            userPrize: P.EIGHTY5,
+            // Final round → show only losses to reinforce luck
+            others: [P.MISS, P.RETRY, P.EMPTY, P.MISS, P.RETRY],
+        },
+    };
+
+    // ============================
+    // DOM
+    // ============================
+    const $ = id => document.getElementById(id);
+    const cardGrid        = $('card-grid');
+    const cardGridWrapper = $('card-grid-wrapper');
+    const roundBadge      = $('round-badge').querySelector('span');
+    const gameTitle       = $('game-title');
+    const gameSubtitle    = $('game-subtitle');
+    const progressBar     = $('progress-bar');
+    const progressLabel   = $('progress-label');
+    const progressHint    = $('progress-hint');
+    const victoryCta      = $('victory-cta-wrapper');
+    const attemptsCounter = $('attempts-counter');
+    const attemptsNum     = $('attempts-num');
+    const introOverlay    = $('intro-overlay');
+    const introStart      = $('intro-start');
+    const modalOverlay    = $('modal-overlay');
+    const modalBox        = $('modal-box');
+    const modalEmoji      = $('modal-emoji');
+    const modalTitle      = $('modal-title');
+    const modalDesc       = $('modal-desc');
+    const modalBtn        = $('modal-btn');
+    const finalScreen     = $('final-screen');
+    const finalTimer      = $('final-timer');
+    const screenFlash     = $('screen-flash');
+
+    // ============================
+    // AUDIO
+    // ============================
+    let audioCtx = null;
+    function ctx() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        return audioCtx;
+    }
+    function tone(freq, type, dur, vol = 0.06) {
+        const c = ctx();
+        const o = c.createOscillator();
+        const g = c.createGain();
+        o.type = type;
+        o.frequency.setValueAtTime(freq, c.currentTime);
+        g.gain.setValueAtTime(vol, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+        o.connect(g); g.connect(c.destination);
+        o.start(); o.stop(c.currentTime + dur);
+    }
+
+    function playShuffleSound() {
+        for (let i = 0; i < 14; i++) {
+            setTimeout(() => tone(700 + Math.random() * 800, 'triangle', 0.035, 0.035), i * 60);
+        }
+    }
+    function playError() {
+        tone(220, 'square', 0.12, 0.05);
+        setTimeout(() => tone(160, 'square', 0.22, 0.04), 100);
+    }
+    function playWin() {
+        tone(523, 'sine', 0.1, 0.06);
+        setTimeout(() => tone(659, 'sine', 0.1, 0.06), 80);
+        setTimeout(() => tone(784, 'sine', 0.1, 0.06), 160);
+        setTimeout(() => tone(1047, 'sine', 0.4, 0.08), 250);
+    }
+    function playFanfare() {
+        tone(523, 'sine', 0.12, 0.07);
+        setTimeout(() => tone(659, 'sine', 0.12, 0.07), 100);
+        setTimeout(() => tone(784, 'sine', 0.15, 0.07), 200);
+        setTimeout(() => tone(1047, 'sine', 0.5, 0.09), 320);
+        setTimeout(() => { tone(1175, 'sine', 0.15, 0.08); tone(784, 'sine', 0.15, 0.05); }, 500);
+        setTimeout(() => { tone(1319, 'sine', 0.5, 0.09); tone(880, 'sine', 0.5, 0.06); }, 650);
+    }
+    function playBonus() {
+        tone(660, 'sine', 0.08, 0.06);
+        setTimeout(() => tone(880, 'sine', 0.08, 0.06), 70);
+        setTimeout(() => tone(1100, 'sine', 0.08, 0.06), 140);
+        setTimeout(() => tone(1320, 'sine', 0.3, 0.07), 210);
+    }
+
+    // ============================
+    // PROGRESS BAR
+    // ============================
+    function setProgress(pct, hint) {
+        progressBar.style.width = pct + '%';
+        progressLabel.textContent = pct + '%';
+        if (hint !== undefined) progressHint.textContent = hint;
+    }
+
+    // ============================
+    // ATTEMPTS COUNTER
+    // ============================
+    function showAttempts(num) {
+        attempts = num;
+        attemptsNum.textContent = num;
+        attemptsCounter.classList.remove('hidden');
+        attemptsNum.classList.remove('counter-bounce');
+        void attemptsNum.offsetWidth; // force reflow
+        attemptsNum.classList.add('counter-bounce');
+    }
+
+    function decrementAttempts() {
+        attempts--;
+        attemptsNum.textContent = attempts;
+        attemptsNum.classList.remove('counter-bounce');
+        void attemptsNum.offsetWidth;
+        attemptsNum.classList.add('counter-bounce');
+    }
+
+    // ============================
+    // FLYING NUMBER ANIMATION
+    // ============================
+    function flyNumberToBar(startEl, text) {
+        return new Promise(resolve => {
+            const startRect = startEl.getBoundingClientRect();
+            const barRect = progressBar.parentElement.getBoundingClientRect();
+
+            const floater = document.createElement('div');
+            floater.className = 'flying-number';
+            floater.textContent = text;
+            floater.style.left = startRect.left + startRect.width / 2 + 'px';
+            floater.style.top = startRect.top + startRect.height / 2 + 'px';
+            document.body.appendChild(floater);
+
+            gsap.to(floater, {
+                x: barRect.left + barRect.width / 2 - (startRect.left + startRect.width / 2),
+                y: barRect.top + barRect.height / 2 - (startRect.top + startRect.height / 2),
+                scale: 1.6,
+                duration: 0.5,
+                ease: 'power2.in',
+                onComplete: () => {
+                    gsap.to(floater, {
+                        scale: 0, opacity: 0, duration: 0.25,
+                        onComplete: () => { floater.remove(); resolve(); }
+                    });
+                }
+            });
+        });
+    }
+
+    // ============================
+    // MODAL
+    // ============================
+    function showModal(emoji, title, desc, btnText, cb) {
+        modalEmoji.textContent = emoji;
+        modalTitle.textContent = title;
+        modalDesc.innerHTML = desc;
+        modalBtn.textContent = btnText;
+        modalOverlay.classList.remove('hidden');
+        modalOverlay.classList.add('flex');
+        modalBox.classList.add('modal-pop');
+        modalBtn.onclick = () => {
+            modalOverlay.classList.add('hidden');
+            modalOverlay.classList.remove('flex');
+            modalBox.classList.remove('modal-pop');
+            if (cb) cb();
+        };
+    }
+
+    // ============================
+    // BUILD CARDS (clean fronts — no ? icon)
+    // ============================
+    function buildCards() {
+        cardGrid.innerHTML = '';
+        clickable = false;
+
+        const totalRounds = 4;
+        const texts = {
+            1: { b:'RODADA 1',       t:'Escolha uma carta!',  s:'Toque em uma carta para revelar seu prêmio.' },
+            2: { b:'RODADA 2',       t:'Use sua tentativa!',  s:'Você tem rodadas extras. Aproveite!' },
+            3: { b:'RODADA 3',       t:'Continue!',           s:'Sua sorte pode mudar a qualquer momento...' },
+            4: { b:'RODADA FINAL 🔥', t:'Última chance!',      s:'O prêmio máximo está em jogo.' },
+        };
+        const r = texts[round];
+        roundBadge.textContent = r.b;
+        gameTitle.textContent = r.t;
+        gameSubtitle.textContent = r.s;
+
+        if (round === 4) {
+            roundBadge.classList.add('bg-shopee', 'text-white');
+            roundBadge.classList.remove('bg-shopee/10', 'text-shopee');
+        } else {
+            roundBadge.classList.remove('bg-shopee', 'text-white');
+            roundBadge.classList.add('bg-shopee/10', 'text-shopee');
+        }
+
+        for (let i = 0; i < 6; i++) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'perspective card-slot';
+            wrapper.style.cssText = 'aspect-ratio:2/3;';
+            wrapper.innerHTML = `
+                <div class="card-container preserve-3d w-full h-full relative cursor-pointer" data-idx="${i}">
+                    <!-- FRONT: Clean, smooth, no icons -->
+                    <div class="card-front absolute inset-0 backface-hidden rounded-2xl shadow-md card-glossy card-front-pattern
+                                bg-gradient-to-br from-shopee via-shopee-light to-shopee
+                                flex items-center justify-center border border-white/20">
+                    </div>
+                    <!-- BACK: Prize reveal -->
+                    <div class="card-back absolute inset-0 backface-hidden rotate-y-180 rounded-2xl shadow-md
+                                bg-white border border-shopee/15
+                                flex flex-col items-center justify-center p-2 gap-0.5">
+                        <span class="prize-icon text-2xl"></span>
+                        <span class="prize-text text-shopee font-extrabold text-center text-[11px] leading-tight"></span>
+                    </div>
+                </div>`;
+            wrapper.addEventListener('click', () => handleClick(i));
+            cardGrid.appendChild(wrapper);
+        }
+    }
+
+    // ============================
+    // SHUFFLE ANIMATION — CENTRALIZED
+    // ============================
+    function shuffleAnimation() {
+        return new Promise(resolve => {
+            const wrappers = Array.from(cardGrid.querySelectorAll('.card-slot'));
+            if (wrappers.length === 0) { resolve(); return; }
+
+            const gridRect = cardGridWrapper.getBoundingClientRect();
+            const gridCenterX = gridRect.width / 2;
+            const gridCenterY = gridRect.height / 2;
+
+            const cardPositions = wrappers.map(w => {
+                const r = w.getBoundingClientRect();
+                return {
+                    dx: gridCenterX - (r.left - gridRect.left + r.width / 2),
+                    dy: gridCenterY - (r.top - gridRect.top + r.height / 2),
+                };
+            });
+
+            playShuffleSound();
+
+            const tl = gsap.timeline({ onComplete: resolve });
+
+            // Phase 1: CONVERGE to center
+            tl.to(wrappers, {
+                x: (i) => cardPositions[i].dx,
+                y: (i) => cardPositions[i].dy,
+                scale: 0.7,
+                rotation: () => (Math.random() - 0.5) * 10,
+                duration: 0.35,
+                ease: 'power2.in',
+            });
+
+            // Phase 2: VIBRATE at center for ~0.6s
+            for (let step = 0; step < 4; step++) {
+                tl.to(wrappers, {
+                    x: (i) => cardPositions[i].dx + (Math.random() - 0.5) * 16,
+                    y: (i) => cardPositions[i].dy + (Math.random() - 0.5) * 12,
+                    rotation: () => (Math.random() - 0.5) * 18,
+                    duration: 0.15,
+                    ease: 'power1.inOut',
+                });
+            }
+
+            // Phase 3: EXPLODE back to grid
+            tl.to(wrappers, {
+                x: 0, y: 0, scale: 1, rotation: 0,
+                duration: 0.4,
+                stagger: { each: 0.04, from: 'center' },
+                ease: 'back.out(1.7)',
+            });
+        });
+    }
+
+    // ============================
+    // CARD CLICK
+    // ============================
+    function handleClick(index) {
+        if (!clickable) return;
+        clickable = false;
+        ctx();
+
+        const cfg = ROUND_CFG[round];
+        const containers = Array.from(cardGrid.querySelectorAll('.card-container'));
+
+        // Assign prizes
+        const prizes = [];
+        let otherIdx = 0;
+        for (let i = 0; i < 6; i++) {
+            prizes[i] = (i === index) ? cfg.userPrize : cfg.others[otherIdx++];
+        }
+
+        // Write labels
+        containers.forEach((c, i) => {
+            c.querySelector('.prize-icon').textContent = ICONS[prizes[i]] || '❓';
+            c.querySelector('.prize-text').textContent = prizes[i];
+        });
+
+        // Flip clicked card and add suspense highlight
+        containers[index].classList.add('flipped', 'chosen-glow');
+
+        // 1.0s delay before revealing others (brain processing time)
+        setTimeout(() => {
+            containers.forEach((c, i) => {
+                if (i !== index) c.classList.add('flipped');
+            });
+        }, 1000);
+
+        // Process result after all reveals settle + wait an extra 3.0s for suspense (4000ms total)
+        setTimeout(() => handleRoundResult(index, containers), 4000);
+    }
+
+    // ============================
+    // ROUND RESULTS
+    // ============================
+    async function handleRoundResult(index, containers) {
+
+        // ---- ROUND 1: Win "+3 Rodadas Extras" ----
+        if (round === 1) {
+            playBonus();
+            showModal(
+                '🎟️', 'Bônus Desbloqueado!',
+                'Você ganhou <strong class="text-shopee">+3 Rodadas Extras</strong>!<br><br>Use suas tentativas e acumule descontos incríveis.',
+                'USAR MINHAS RODADAS',
+                () => {
+                    showAttempts(3);
+                    round = 2;
+                    startRound();
+                }
+            );
+        }
+
+        // ---- ROUND 2: Lose "Não foi dessa vez" ----
+        else if (round === 2) {
+            playError();
+            decrementAttempts();
+            showModal(
+                '😔', 'Quase lá!',
+                'Não foi dessa vez… Mas viu o <strong class="text-shopee">95% de Desconto</strong> que estava ao lado?<br><br>Você ainda tem tentativas. Não desista agora!',
+                'TENTAR NOVAMENTE',
+                () => { round = 3; startRound(); }
+            );
+        }
+
+        // ---- ROUND 3: Win "10%" ----
+        else if (round === 3) {
+            playWin();
+            decrementAttempts();
+
+            const clickedCard = containers[index];
+            await flyNumberToBar(clickedCard, '+10%');
+
+            accumulatedDiscount = 10;
+            setProgress(10, 'Parabéns! Desconto acumulado. Continue para ganhar mais!');
+
+            showModal(
+                '🏷️', 'Você ganhou!',
+                'Você desbloqueou <strong class="text-shopee">10% de Desconto Acumulativo</strong>!<br><br>Você ainda tem <strong>1 tentativa</strong> restante. Continue jogando para acumular mais desconto!',
+                'USAR ÚLTIMA TENTATIVA',
+                () => { round = 4; startRound(); }
+            );
+        }
+
+        // ---- ROUND 4: Win "85%" → Total 95% ----
+        else if (round === 4) {
+            playFanfare();
+            decrementAttempts();
+
+            // Screen flash
+            screenFlash.classList.remove('opacity-0');
+            screenFlash.classList.add('screen-flash');
+            setTimeout(() => { screenFlash.classList.add('opacity-0'); screenFlash.classList.remove('screen-flash'); }, 700);
+
+            // Confetti
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.55 }, colors: ['#EE4D2D','#FFD700','#FF6B4A','#fff'] });
+            setTimeout(() => confetti({ particleCount: 100, spread: 80, origin: { y: 0.5 }, colors: ['#EE4D2D','#FFD700'] }), 400);
+            setTimeout(() => {
+                confetti({ particleCount: 70, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#EE4D2D','#FFD700'] });
+                confetti({ particleCount: 70, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#EE4D2D','#FFD700'] });
+            }, 800);
+
+            // Flying "+85%"
+            const clickedCard = containers[index];
+            await flyNumberToBar(clickedCard, '+85%');
+
+            accumulatedDiscount = 95;
+            setProgress(95, '');
+
+            // Bar glow + pulse
+            progressBar.classList.add('bar-glow', 'bar-pulse');
+
+            // Update title & hint
+            gameTitle.textContent = 'Cupom de 95% LIBERADO!';
+            gameSubtitle.textContent = '';
+            progressHint.textContent = '🎉 Cupom de 95% LIBERADO!';
+            progressHint.classList.remove('text-gray-400');
+            progressHint.classList.add('text-shopee', 'font-bold', 'text-sm');
+
+            // Show victory CTA
+            setTimeout(() => {
+                victoryCta.classList.remove('hidden');
+                gsap.fromTo(victoryCta, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.5)' });
+                gsap.to(cardGrid, { opacity: 0.3, duration: 0.5 });
+            }, 600);
+        }
+    }
+
+    // ============================
+    // ROUND START
+    // ============================
+    async function startRound() {
+        buildCards();
+        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await shuffleAnimation();
+        clickable = true;
+    }
+
+    // ============================
+    // TIMER
+    // ============================
+    function startCountdown() {
+        let remaining = 720; // 12 minutos (igual a loja)
+        const tick = () => {
+            if (remaining <= 0) { finalTimer.textContent = '00:00'; finalTimer.classList.add('timer-blink'); return; }
+            remaining--;
+            finalTimer.textContent = `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(remaining % 60).padStart(2, '0')}`;
+            if (remaining <= 60) finalTimer.classList.add('timer-blink');
+            setTimeout(tick, 1000);
+        };
+        setTimeout(tick, 1000);
+    }
+
+    // ============================
+    // VICTORY CTA → FINAL SCREEN
+    // ============================
+    $('victory-cta').onclick = () => {
+        finalScreen.classList.remove('hidden');
+        finalScreen.classList.add('flex');
+        startCountdown();
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#EE4D2D','#FFD700','#FF6B4A','#fff'] });
+    };
+    $('final-cta').onclick = () => { window.location.href = '../../loja/' + window.location.search; };
+
+    // ============================
+    // INTRO → START
+    // ============================
+    introStart.addEventListener('click', () => {
+        ctx();
+        introOverlay.classList.add('hidden');
+        round = 1;
+        startRound();
+    });
+
+})();
+</script>
+<script src="/assets/tracker.js" defer></script>
+</body>
+</html>

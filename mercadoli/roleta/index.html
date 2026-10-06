@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    
+    <script
+	src="https://cdn.jsdelivr.net/gh/xTracky/static@latest/utm-handler.js"
+	data-token="9bcdc6dc-171c-4a65-8733-f908e8198551"
+>
+</script>
+    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Gire!</title>
+
+  <link rel="icon" href="images/favicon.png">
+  <link rel="shortcut icon" href="images/favicon.png">
+
+  <link rel="preconnect" href="https://www.clarity.ms" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//i.postimg.cc">
+
+  <link rel="stylesheet" href="css/all.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/stylead8e.css">
+
+ <style>
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  .pulsating {
+    animation: pulse 1.5s infinite;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    overflow-x: hidden;
+    touch-action: manipulation;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border: 0;
+  }
+
+  button {
+    touch-action: manipulation;
+  }
+
+  /* ===== OVERLAY ===== */
+  #overlay.overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.45) !important;
+    z-index: 9998 !important;
+    display: none;
+  }
+
+  #overlay.overlay.active {
+    display: block !important;
+  }
+
+  /* ===== POPUPS ===== */
+  #popup.popup,
+#popup-try-again.popup {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+  display: none !important;
+  z-index: 9999 !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 12px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+
+  left: 0 !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+
+  transform: none !important;
+  translate: none !important;
+
+  background: transparent !important; /* <<< ESSA LINHA RESOLVE */
+}
+
+  #popup.popup.active,
+  #popup-try-again.popup.active {
+    display: flex !important;
+  }
+
+  #popup .popup-content,
+  #popup-try-again .popup-content {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+
+    width: min(92vw, 480px) !important;
+    max-width: 480px !important;
+    min-width: 0 !important;
+    max-height: calc(100vh - 24px) !important;
+    overflow-y: auto !important;
+
+    background: #fff !important;
+    border-radius: 20px !important;
+    padding: 24px 20px !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.25) !important;
+
+    transform: none !important;
+    translate: none !important;
+    float: none !important;
+  }
+
+  #popup .popup-content h2,
+  #popup-try-again .popup-content h2 {
+    margin: 0 0 12px !important;
+    text-align: center !important;
+  }
+
+  #popup .popup-content img,
+  #popup-try-again .popup-content img {
+    display: block !important;
+    margin: 0 auto 16px !important;
+    width: auto !important;
+    max-width: 160px !important;
+    max-height: 160px !important;
+  }
+
+  #popup .popup-content p,
+  #popup-try-again .popup-content p {
+    margin: 0 auto !important;
+    text-align: center !important;
+    line-height: 1.4 !important;
+  }
+
+  #popup .popup-content button,
+  #popup-try-again .popup-content button {
+    display: block !important;
+    margin: 22px auto 0 !important;
+  }
+
+  @media (max-width: 768px) {
+    nav img {
+      max-width: 300px;
+      width: 80%;
+      height: auto;
+    }
+
+    #popup.popup,
+    #popup-try-again.popup {
+      padding: 10px !important;
+    }
+
+    #popup .popup-content,
+    #popup-try-again .popup-content {
+      width: min(94vw, 440px) !important;
+      max-width: 94vw !important;
+      max-height: calc(100vh - 20px) !important;
+      padding: 22px 16px !important;
+    }
+
+    #popup .popup-content img,
+    #popup-try-again .popup-content img {
+      max-width: 150px !important;
+      max-height: 150px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #popup.popup,
+    #popup-try-again.popup {
+      padding: 8px !important;
+    }
+
+    #popup .popup-content,
+    #popup-try-again .popup-content {
+      width: min(96vw, 400px) !important;
+      max-width: 96vw !important;
+      max-height: calc(100vh - 16px) !important;
+      padding: 20px 14px !important;
+    }
+
+    #popup .popup-content img,
+    #popup-try-again .popup-content img {
+      max-width: 130px !important;
+      max-height: 130px !important;
+    }
+  }
+</style>
+
+  <script>
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);
+      t.async=1;
+      t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];
+      if (y && y.parentNode) y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "vo3nvc6ncq");
+  </script>
+
+
+
+  <script>
+    (function () {
+      var urlBackRedirect = '../../back2/';
+      if (!urlBackRedirect) return;
+
+      urlBackRedirect = urlBackRedirect.trim();
+      if (!urlBackRedirect) return;
+
+      var search = window.location.search ? window.location.search.replace(/^\?/, '') : '';
+      if (search) {
+        urlBackRedirect += (urlBackRedirect.indexOf('?') > -1 ? '&' : '?') + search;
+      }
+
+      try {
+        history.pushState({ page: 1 }, "", location.href);
+        history.pushState({ page: 2 }, "", location.href);
+
+        window.addEventListener('popstate', function () {
+          setTimeout(function () {
+            window.location.href = urlBackRedirect;
+          }, 1);
+        });
+      } catch (e) {
+        console.warn('Back redirect error:', e);
+      }
+    })();
+  </script>
+
+  <script src="js/jquery.min.js" defer></script>
+  <script src="js/bootstrap.min.js" defer></script>
+  <script src="js/confetti.browser.min.js" defer></script>
+</head>
+<body>
+  <nav style="padding: 20px 0; background-color: white; display: flex; justify-content: center; align-items: center;">
+    <img
+      src="../images/brand-banner.3f2f57a3.png"
+      style="max-width: 300px; width: 80%; height: auto;"
+      alt="Logo"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+    >
+  </nav>
+
+  <div id="loading-screen" style="display: none;">
+    <div class="spinner-loading"></div>
+  </div>
+
+  <div id="page-content">
+    <section>
+      <div class="cta">
+        <h1 id="cta-text">
+          Gire a <b>Roleta</b> para ver o seu <b> Desconto</b>!<br>
+        </h1>
+      </div>
+
+      <div class="roulette">
+        <img
+          src="images/roleta.png"
+          id="roleta1"
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          draggable="false"
+        >
+        <div id="roleta2">
+          <img
+            src="images/roleta.png"
+            class="spinner"
+            alt="Roleta"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            draggable="false"
+          >
+        </div>
+        <img
+          src="images/button-gire.png"
+          id="roleta3"
+          style="cursor: pointer;"
+          alt="Gire"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          draggable="false"
+        >
+      </div>
+
+      <div class="button-roulette">
+        <button id="button-cta" class="runSpin" type="button">
+          GIRE PARA GANHAR
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <div id="people" class="people">
+    <img
+      src="images/man6.jpg"
+      id="people-img"
+      alt=""
+      loading="lazy"
+      decoding="async"
+      draggable="false"
+    >
+    <p style="text-align: center" id="people-p">João acabou de ganhar <b>75% de desconto</b>!</p>
+  </div>
+
+  <div id="overlay" class="overlay"></div>
+
+  <div id="popup-try-again" class="popup">
+    <div class="popup-content">
+      <h2>Uma pena!</h2>
+      <img src="images/sweat.png" alt="" loading="lazy" decoding="async" draggable="false">
+      <p>
+        Você foi o grande selecionado e ganhou
+        <b class="text-success pulsating" style="color: green!important; font-size: 22px; display: inline-block;"> 01 </b>
+        chance extra. Boa sorte!
+      </p>
+      <button id="try-again-button" type="button">Tentar Novamente</button>
+    </div>
+  </div>
+
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h2>Parabéns!</h2>
+      <img src="images/star-struck.png" alt="" loading="lazy" decoding="async" draggable="false">
+      <p>Você acaba de ganhar o <b class="text-success pulsating" style="color: green!important;">Mega Desconto de 95%</b></p>
+      <button id="resgatar-premio" type="button">Resgatar seu Prêmio</button>
+    </div>
+    <audio id="confetti-audio" src="media/ml.mp3" preload="none"></audio>
+    <audio id="roleta-audio" src="media/roleta.mp3" preload="none"></audio>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      let attempt = 0;
+      let isSpinning = false;
+      let peopleInterval = null;
+      let peopleIndex = 0;
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => document.querySelectorAll(selector);
+
+      const safePlay = (audioEl) => {
+        if (!audioEl) return;
+        const promise = audioEl.play();
+        if (promise && typeof promise.catch === 'function') {
+          promise.catch(() => {});
+        }
+      };
+
+      const safePause = (audioEl) => {
+        if (!audioEl) return;
+        try { audioEl.pause(); } catch (e) {}
+      };
+
+      const showElement = (el) => {
+        if (!el) return;
+        el.classList.add('active');
+      };
+
+      const hideElement = (el) => {
+        if (!el) return;
+        el.classList.remove('active');
+      };
+
+      const animateSpin = () => {
+        if (isSpinning) return;
+
+        const roleta2 = $('#roleta2');
+        const roleta2Img = $('#roleta2 img');
+        const buttonCta = $('#button-cta');
+        const confettiAudio = $('#confetti-audio');
+        const roletaAudio = $('#roleta-audio');
+
+        if (!roleta2 || !roleta2Img || !buttonCta) return;
+
+        isSpinning = true;
+        roleta2Img.classList.remove('spinner');
+        buttonCta.style.display = 'none';
+
+        try {
+          roletaAudio.currentTime = 0;
+        } catch (e) {}
+
+        safePlay(roletaAudio);
+
+        if (attempt === 0) {
+          roleta2.classList.remove('wheel__spinner_animated');
+          roleta2.classList.add('wheel__spinner_animated_retry_then_win');
+
+          setTimeout(() => {
+            safePause(roletaAudio);
+            showElement($('#overlay'));
+            showElement($('#popup-try-again'));
+            isSpinning = false;
+          }, 10000);
+        } else {
+          roleta2.classList.remove('wheel__spinner_animated_retry_then_win');
+          roleta2.classList.add('wheel__spinner_animated');
+
+          setTimeout(() => {
+            safePause(roletaAudio);
+
+            if (typeof confetti === 'function') {
+              confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+              });
+            }
+
+            safePlay(confettiAudio);
+            showElement($('#overlay'));
+            showElement($('#popup'));
+
+            buttonCta.classList.add('hide-me');
+            isSpinning = false;
+          }, 10000);
+        }
+      };
+
+      const handleSpinClick = () => {
+        if (isSpinning) return;
+        animateSpin();
+        attempt++;
+      };
+
+      const bindEvents = () => {
+        $$('.runSpin').forEach((element) => {
+          element.addEventListener('click', handleSpinClick, { passive: true });
+        });
+
+        const roleta3 = $('#roleta3');
+        if (roleta3) {
+          roleta3.addEventListener('click', handleSpinClick, { passive: true });
+        }
+
+        const tryAgainButton = $('#try-again-button');
+        if (tryAgainButton) {
+          tryAgainButton.addEventListener('click', () => {
+            const overlay = $('#overlay');
+            const tryAgainPopup = $('#popup-try-again');
+            const roleta2 = $('#roleta2');
+            const buttonCta = $('#button-cta');
+
+            hideElement(overlay);
+            hideElement(tryAgainPopup);
+
+            if (roleta2) {
+              roleta2.classList.remove('wheel__spinner_animated_retry_then_win');
+            }
+
+            buttonCta.style.display = 'block';
+          });
+        }
+
+        const resgatarPremio = $('#resgatar-premio');
+        if (resgatarPremio) {
+          resgatarPremio.addEventListener('click', () => {
+            const params = new URLSearchParams(window.location.search);
+            const queryParams = params.toString();
+            const baseUrl = '../../loja/';
+            const redirectUrl = queryParams ? `${baseUrl}?${queryParams}` : baseUrl;
+            window.location.href = redirectUrl;
+          });
+        }
+      };
+
+      const initPeoplePopup = () => {
+        const descontos = [5, 25, 50, 75, 95];
+        const frases = [
+          { nome: 'Pedro Oliveira', imgSrc: 'https://i.postimg.cc/RhB8zCK5/24.jpg' },
+          { nome: 'Ana Alves', imgSrc: 'https://i.postimg.cc/prw31XTF/2.jpg' },
+          { nome: 'Fernanda Santos', imgSrc: 'https://i.postimg.cc/X7FvNr9t/3.jpg' },
+          { nome: 'Bruno Souza', imgSrc: 'https://i.postimg.cc/2ynfYBgw/5.jpg' },
+          { nome: 'Fabrício Costa', imgSrc: 'https://i.postimg.cc/kXrTRHtD/6.jpg' },
+          { nome: 'Juliana Lima', imgSrc: 'https://i.postimg.cc/0ynPrDjX/4.jpg' },
+          { nome: 'Yasmin Araújo', imgSrc: 'https://i.postimg.cc/9XNrx3BF/10.jpg' },
+          { nome: 'Lucilene Silva', imgSrc: 'https://i.postimg.cc/x8Wj92sv/11.jpg' },
+          { nome: 'Everaldo Rocha', imgSrc: 'https://i.postimg.cc/nhFYvfVV/7.jpg' },
+          { nome: 'Oswaldo Carvalho', imgSrc: 'https://i.postimg.cc/cHSQ4pzN/9.jpg' },
+          { nome: 'João Pereira', imgSrc: 'https://i.postimg.cc/W3wf26XX/14.jpg' },
+          { nome: 'Ariadiny Gomes', imgSrc: 'https://i.postimg.cc/xTMNqxKf/12.jpg' },
+          { nome: 'Carla Ferreira', imgSrc: 'https://i.postimg.cc/qq8BBFWW/13.jpg' },
+          { nome: 'Gabriela Vieira', imgSrc: 'https://i.postimg.cc/MT9bPss2/15.jpg' },
+          { nome: 'Wellington Martins', imgSrc: 'https://i.postimg.cc/vmBW17Y0/16.jpg' },
+          { nome: 'Iago Barbosa', imgSrc: 'https://i.postimg.cc/rwgHX9Zj/17.jpg' },
+          { nome: 'Maicon Ramos', imgSrc: 'https://i.postimg.cc/0NFcPXYY/18.jpg' },
+          { nome: 'Vitória Castro', imgSrc: 'https://i.postimg.cc/VkSKpcMf/19.jpg' },
+          { nome: 'Matheus Santos', imgSrc: 'https://i.postimg.cc/qvXNkN2j/20.jpg' },
+          { nome: 'Marta Rocha', imgSrc: 'https://i.postimg.cc/N0Fdh9nr/23.jpg' },
+          { nome: 'Geraldo Nascimento', imgSrc: 'https://i.postimg.cc/25gVzM07/21.jpg' },
+          { nome: 'Daniel Ribeiro', imgSrc: 'https://i.postimg.cc/ZK0tcnb0/22.jpg' }
+        ];
+
+        const contDiv = $('#people');
+        const peopleFrase = $('#people-p');
+        const peopleImg = $('#people-img');
+
+        if (!contDiv || !peopleFrase || !peopleImg || !frases.length) return;
+
+        const renderPerson = () => {
+          peopleIndex = (peopleIndex + 1) % frases.length;
+          const current = frases[peopleIndex];
+          const desconto = descontos[Math.floor(Math.random() * descontos.length)];
+
+          peopleFrase.innerHTML = `${current.nome} acabou de ganhar <b>${desconto}% de desconto</b>!`;
+
+          const nextImg = new Image();
+          nextImg.decoding = 'async';
+          nextImg.src = current.imgSrc;
+          nextImg.onload = () => {
+            peopleImg.src = current.imgSrc;
+          };
+
+          contDiv.classList.toggle('display-off');
+          contDiv.classList.remove('slide-animation');
+
+          setTimeout(() => {
+            contDiv.classList.toggle('display-off');
+            contDiv.classList.add('slide-animation');
+          }, 20);
+        };
+
+        peopleInterval = window.setInterval(renderPerson, 4000);
+      };
+
+      const hideLoadingScreen = () => {
+        const loadingScreen = $('#loading-screen');
+        if (loadingScreen) {
+          loadingScreen.style.display = 'none';
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        bindEvents();
+        initPeoplePopup();
+      });
+
+      window.addEventListener('load', hideLoadingScreen);
+
+      setTimeout(hideLoadingScreen, 3000);
+    })();
+  </script>
+<script src="/assets/tracker.js" defer></script>
+</body>
+</html>

